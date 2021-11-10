@@ -5,7 +5,7 @@ data "azurerm_databricks_workspace_private_endpoint_connection" "example" {
   private_endpoint_id = azurerm_private_endpoint.databricks[0].id
 }
 resource "azurerm_network_security_group" "example" {
-  name                = "nsg_databricks_${var.prjnum}"
+  name                = "nsg_databricks_${var.orgname}_${var.enviro}_${var.prjnum}"
   location            = var.location
   resource_group_name = var.netsec_rgname 
 }
@@ -21,11 +21,11 @@ resource "azurerm_subnet_network_security_group_association" "public" {
 }
 
 resource "azurerm_databricks_workspace" "example" {
-  name                = "DBW_${var.prjnum}"
+  name                = "DBW_${var.orgname}_${var.enviro}_${var.prjnum}"
   resource_group_name = var.dataops_rgname
   location            = var.location
   sku                 = "premium"
-  managed_resource_group_name = "rg_databricks_managed_${var.prjnum}"
+  managed_resource_group_name = "rg_databricks_managed_${var.orgname}_${var.enviro}_${var.prjnum}"
   public_network_access_enabled = var.private_networking ? false : true
   network_security_group_rules_required = var.private_networking ? "NoAzureDatabricksRules" : "AllRules"
   
@@ -48,13 +48,13 @@ resource "azurerm_databricks_workspace" "example" {
 
 resource "azurerm_private_endpoint" "databricks" {
   count = var.private_networking ? 1:0
-  name                = "pe_databricks_${var.prjnum}"
+  name                = "pe_databricks_${var.orgname}_${var.enviro}_${var.prjnum}"
   location            = var.location
   resource_group_name = var.network_rgname
   subnet_id           = var.endpoint_subnet_id
 
   private_service_connection {
-    name                           = "psc_${var.prjnum}"
+    name                           = "psc_${var.orgname}_${var.enviro}_${var.prjnum}"
     is_manual_connection           = false
     private_connection_resource_id = azurerm_databricks_workspace.example.id
     subresource_names              = ["databricks_ui_api"]
@@ -65,7 +65,7 @@ resource "azurerm_private_dns_zone" "example" {
   count = var.private_networking ? 1:0
   depends_on = [azurerm_private_endpoint.databricks[0]]
 
-  name                = "privatelink.azuredatabricks.net"
+  name                = "privatelink.usgovvirginia.databricks.azure.us"
   resource_group_name = var.network_rgname
 }
 

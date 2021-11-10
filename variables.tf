@@ -10,6 +10,14 @@ variable "netsec_rgname" {
     type = string
 }
 
+variable "orgname" {
+  type        = string
+}
+
+variable "enviro" {
+  type        = string"
+}
+
 variable "prjnum" {
   type        = string
   description = "define the project number for TFstate file ex. 4858"
