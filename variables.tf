@@ -15,7 +15,7 @@ variable "orgname" {
 }
 
 variable "enviro" {
-  type        = string"
+  type        = string
 }
 
 variable "prjnum" {
